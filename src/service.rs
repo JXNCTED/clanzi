@@ -116,7 +116,11 @@ impl Service {
             let mut stopping: Option<Instant> = None;
             let mut last_snapshot = None;
             let mut logger = Logger::new(directory.join("logs"));
-            logger.write("START version=0.1.0 platform=linux");
+            logger.write(concat!(
+                "START version=",
+                env!("CARGO_PKG_VERSION"),
+                " platform=linux"
+            ));
             if !demo && !monitoring {
                 logger.write("SLEEP_MONITOR_FAILED dbus-monitor unavailable");
             }

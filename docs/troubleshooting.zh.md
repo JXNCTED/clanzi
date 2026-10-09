@@ -38,10 +38,10 @@
 | 症状 | 操作 |
 |---|---|
 | 缺少 `webkit2gtk-4.1` 或 appindicator | 安装 Tauri Linux 构建依赖。 |
-| Cargo 无法下载 | 在受限沙箱外执行 `cargo fetch --manifest-path src-tauri/Cargo.toml --locked` 下载依赖。 |
+| Cargo 无法下载 | 检查网络/代理后执行 `cargo fetch --manifest-path src-tauri/Cargo.toml --locked` 下载依赖。 |
 | 原生调试启动时 Vite 不可用 | 在另一个终端运行 `npm run dev`，或使用内嵌资源的发布版二进制。 |
 | UI 测试缺少浏览器 | 执行 `npm exec playwright install chromium`；也可用 `PLAYWRIGHT_CHROMIUM_EXECUTABLE` 指定兼容的已有浏览器。 |
-| 浏览器以 `Operation not permitted` 退出 | 在普通桌面或 CI 环境运行 UI 测试，本工作区的沙箱禁止 Chromium IPC。 |
+| 浏览器以 `Operation not permitted` 退出 | 在普通桌面或 CI 环境运行 UI 测试，某些沙箱会限制 Chromium IPC。 |
 | GNOME 没有托盘图标 | 再次启动 Olanzi，已有实例会重新打开窗口。 |
 
 应用通过 `dbus-monitor` 观察 logind 的 `PrepareForSleep`；监视启动失败会记录 `SLEEP_MONITOR_FAILED`。当前实现没有持有 logind 延迟抑制器，因此睡眠前清理的时序仍须真实桌面验证。

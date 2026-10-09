@@ -1,8 +1,10 @@
 # 11 Olanzi 跨平台参考重建规格
 
-> 🌐 [English](11-cross-platform-replication-spec.md)
+> 本参考快照来自 [MrCroxx/olanzi](https://github.com/MrCroxx/olanzi)。当前 Linux 范围及按钮行为见[配置说明](docs/configuration.zh.md)和[验证状态](docs/acceptance.zh.md)。另见[上游声明](THIRD_PARTY_NOTICES.md)。
 
-> 📚 文档集：[README](../README.zh.md) · [02 协议](02-vibekey-protocol.zh.md) · [09 参考应用](09-native-macos.zh.md) · [10 参考运行时](10-input-runtime.zh.md) · **11 跨平台参考重建规格**
+> 🌐 [English](cross-platform-replication-spec.md)
+
+> 📚 文档集：[README](README.zh.md) · [02 协议](https://github.com/MrCroxx/olanzi/blob/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/02-vibekey-protocol.zh.md) · [09 参考应用](https://github.com/MrCroxx/olanzi/blob/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/09-native-macos.zh.md) · [10 参考运行时](https://github.com/MrCroxx/olanzi/blob/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/10-input-runtime.zh.md) · **11 跨平台参考重建规格**
 
 ## 1 文档契约
 
@@ -20,14 +22,14 @@
 
 | 标识 | 资料 | 可用于确定什么 | 不能据此声称什么 |
 |---|---|---|---|
-| R1 | [原生应用指南](09-native-macos.zh.md) | 编辑流程、草稿与保存、后台运行、权限呈现和导入导出语义 | 其中描述的每个场景都已实机验证 |
-| R2 | [输入运行时](10-input-runtime.zh.md) | 控件事件、动作语义、取消与异常释放边界 | Linux 已具有相同行为 |
-| R3 | [协议](02-vibekey-protocol.zh.md) | TEA、帧布局、接口识别、已知命令与回复 | 未验证的写命令可以安全使用 |
-| R4 | [心跳调查](07-heartbeat-investigation.zh.md)及其证据链接 | 标准输入与厂商事件之间的切换、观察与推断的边界 | 心跳成功等于设备在线或永久不休眠 |
-| R5 | [中文键位截图](images/keymap-zh.png)、[英文键位截图](images/keymap-en.png)、[设置截图](images/device-zh.png) | 视觉层级、设备方位、控件选择与编辑区域关系 | 演示截图证明连接了硬件或交互正常 |
-| R6 | [验证记录](05-verification-log.zh.md) | 具体实验、失败尝试与已确认结果 | 历史局部成功证明整个新产品可用 |
+| R1 | [原生应用指南](https://github.com/MrCroxx/olanzi/blob/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/09-native-macos.zh.md) | 编辑流程、草稿与保存、后台运行、权限呈现和导入导出语义 | 其中描述的每个场景都已实机验证 |
+| R2 | [输入运行时](https://github.com/MrCroxx/olanzi/blob/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/10-input-runtime.zh.md) | 控件事件、动作语义、取消与异常释放边界 | Linux 已具有相同行为 |
+| R3 | [协议](https://github.com/MrCroxx/olanzi/blob/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/02-vibekey-protocol.zh.md) | TEA、帧布局、接口识别、已知命令与回复 | 未验证的写命令可以安全使用 |
+| R4 | [心跳调查](https://github.com/MrCroxx/olanzi/blob/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/07-heartbeat-investigation.zh.md)及其证据链接 | 标准输入与厂商事件之间的切换、观察与推断的边界 | 心跳成功等于设备在线或永久不休眠 |
+| R5 | [中文键位截图](https://raw.githubusercontent.com/MrCroxx/olanzi/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/images/keymap-zh.png)、[英文键位截图](https://raw.githubusercontent.com/MrCroxx/olanzi/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/images/keymap-en.png)、[设置截图](https://raw.githubusercontent.com/MrCroxx/olanzi/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/images/device-zh.png) | 视觉层级、设备方位、控件选择与编辑区域关系 | 演示截图证明连接了硬件或交互正常 |
+| R6 | [验证记录](https://github.com/MrCroxx/olanzi/blob/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/05-verification-log.zh.md) | 具体实验、失败尝试与已确认结果 | 历史局部成功证明整个新产品可用 |
 
-![参考应用的键位界面，演示数据](images/keymap-zh.png)
+![参考应用的键位界面，演示数据](https://raw.githubusercontent.com/MrCroxx/olanzi/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/images/keymap-zh.png)
 
 截图仅作布局与视觉参考。重建时保留“设备与控件在上、动作编辑在下、设置独立”的关系，移除本规格排除的 Layer、手势列、APP 和宏区域；不要求像素级复制、原字体、原图标或原资源文件。
 

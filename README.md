@@ -1,96 +1,75 @@
-# Olanzi for Linux
+# clanzi — AU05 key mapper for Linux
 
-[中文](README.zh.md) · [Specification](cross-platform-replication-spec.md) · [Acceptance](docs/acceptance.md)
+[中文](README.zh.md) · [Configuration](docs/configuration.md) · [Troubleshooting](docs/troubleshooting.md) · [Validation status](docs/acceptance.md)
 
-A local AU05 key mapper built with **Tauri 2, React, TypeScript, and Rust**. This implementation targets Linux x86_64 first, as requested. macOS is not implemented.
+A local Linux x86_64 desktop mapper for Ulanzi Vibe Key (AU05), built with **Tauri 2, React, TypeScript, and Rust**.
 
-Select one of six controls, assign one ordinary key and optional Ctrl/Shift/Alt/Super modifiers, then save to this computer. Editing remains available without hardware or permissions. Closing the window keeps the runtime alive; reopening the application brings back the existing window and draft.
+- Map six controls to keys and Ctrl/Shift/Alt/Super combinations.
+- Buttons follow physical press and release; knob rotation sends short taps.
+- Edit offline, save locally, and import/export JSON configurations.
+- Keep mappings active in the background, with an English or Chinese interface.
 
-## Run
+The desktop UI displays the name **Olanzi**. Closing the window keeps forwarding active; use **Settings → Quit Olanzi** to exit. Linux desktop and hardware validation is still incomplete; see [validation status](docs/acceptance.md).
 
-Install the generated package and explicitly install its device permissions:
+## Build and run
 
-```sh
-sudo apt install ./artifacts/clanzi_0.1.0_amd64.deb
-sudo sh /usr/share/clanzi/install-permissions.sh
-clanzi
-```
-
-Reconnect the receiver after installing the rules. Use **Settings → Retry connection**. Run the application as your normal desktop user. Quit Ulanzi Studio and other AU05 clients before connecting. The rules grant the active local session access to the AU05 vendor interface and `/dev/uinput`; they do not open physical keyboard event nodes.
-
-The target acceptance environments are Ubuntu 24.04 GNOME Wayland and Xorg. Builds in this workspace use Ubuntu 22.04 x86_64; that does not establish hardware compatibility on either target. See the [acceptance record](docs/acceptance.md) for tests actually performed and remaining limitations.
-
-## Push-to-talk with Handy
-
-Quit the previous clanzi instance from **Settings → Quit Olanzi**, then launch the updated binary or install the rebuilt package. Closing its window only hides it.
-
-AU05 buttons now follow physical press and release automatically: a short press is short, and holding keeps the shortcut down until release. There is no mode selector or long-press threshold. Existing shortcuts work immediately after restarting the updated application. For Handy, assign its recording shortcut if needed and use Handy’s push-to-talk setting. The three buttons and knob press follow this behavior; rotation remains tap-only.
-
-Existing button mappings also follow physical duration. See [button behavior and configuration compatibility](docs/hold-mode.md).
-
-## Development
-
-Install the [Tauri Linux prerequisites](https://v2.tauri.app/start/prerequisites/#linux), Rust, and Node.js 24. Dependencies are pinned in both Cargo lockfiles and `package-lock.json`.
+Install Rust, Node.js 24, and the [Tauri Linux prerequisites](https://v2.tauri.app/start/prerequisites/#linux). On Ubuntu:
 
 ```sh
 sudo apt install libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev build-essential
 npm ci
 cargo fetch --locked
 cargo fetch --manifest-path src-tauri/Cargo.toml --locked
-make dev
+make deb
+sudo apt install ./artifacts/clanzi_0.1.0_amd64.deb
+sudo sh /usr/share/clanzi/install-permissions.sh
+clanzi
 ```
 
-`make dev` uses the Tauri CLI through npm. To avoid fetching the CLI, run `npm run dev` and `cargo run --manifest-path src-tauri/Cargo.toml` in separate terminals. Native development uses the Vite server at port 1420.
+Reconnect the receiver after installing permissions, then select **Settings → Retry connection**. Run the GUI as your normal desktop user and close other AU05 clients. The rules grant the active local session access to the AU05 vendor interface and `/dev/uinput`; they do not grant access to physical keyboard event nodes.
+
+To update, quit the running instance first. After rebuilding, run `./src-tauri/target/release/clanzi`, or reinstall the package with `sudo apt install --reinstall ./artifacts/clanzi_0.1.0_amd64.deb`.
+
+## Voice input with Handy
+
+Assign an AU05 button to your Handy recording shortcut and save. Set Handy to push-to-talk: hold the button to record, release to stop. All three buttons and the knob press follow physical duration automatically, with no mode selector or long-press threshold. See [configuration](docs/configuration.md) for shared-key behavior and compatibility.
+
+## Development and checks
 
 ```sh
-make demo
-# Alternatively, run the packaged binary:
-clanzi --demo
-# Browser-only, explicitly labeled preview:
-npm run dev
-```
-
-The native demo uses a separate instance identifier and a temporary configuration directory. It never opens a real receiver or creates a virtual keyboard. Browser preview keeps data only in memory. Demo success is not hardware validation.
-
-## Check and package
-
-```sh
-make check
+make dev                 # Native desktop development
+make demo                # Isolated native demo, no real device or key output
+make check               # Formatting, core lint, frontend build, and tests
 cargo clippy --manifest-path src-tauri/Cargo.toml --offline --all-targets -- -D warnings
 npm exec playwright install chromium
 node tools/ui-smoke.mjs
-make deb
 ```
 
-`make deb` produces `artifacts/clanzi_0.1.0_amd64.deb` with the embedded frontend. Installation needs no Rust or Node toolchain. The separate validator accepts only the specified format:
+`make dev` invokes the Tauri CLI through npm. Alternatively, run `npm run dev` and `cargo run --manifest-path src-tauri/Cargo.toml` in separate terminals. Vite uses port 1420; browser-only preview stores data in memory. Demo success does not establish hardware compatibility.
+
+| Path | Purpose |
+|---|---|
+| `ui/` | React editor, bilingual text, frontend validation, IPC |
+| `src/` | Configuration, storage, protocol, runtime, hidraw/uinput, worker service |
+| `src-tauri/` | Native window, tray, single instance, file dialogs |
+| `tests/`, `tools/` | Deterministic tests, UI smoke test, package build |
+| `packaging/` | Desktop entry and permission installers |
+
+The [reference specification](cross-platform-replication-spec.md) records the upstream design baseline. Current Linux behavior and deviations are documented in [configuration](docs/configuration.md) and [validation status](docs/acceptance.md).
+
+## Releases
+
+The [Release workflow](.github/workflows/release.yml) builds Linux amd64 packages on Ubuntu 24.04 when a `vMAJOR.MINOR.PATCH` tag is pushed. It checks versions, runs core/frontend/UI tests, and publishes a GitHub Release containing the `.deb` and `SHA256SUMS`, with generated release notes. Prerelease suffixes are not supported yet.
+
+Before tagging, keep the versions in `Cargo.toml`, `src-tauri/Cargo.toml`, `src-tauri/tauri.conf.json`, and `package.json` aligned; refresh and commit both Cargo lockfiles and `package-lock.json` as needed. Commit the workflow and all release files, then validate and tag that commit:
 
 ```sh
-cargo run --offline --bin clanzi-validate -- examples/keymap.json
+node tools/release-version.mjs v0.1.0
+git tag -a v0.1.0 -m "clanzi v0.1.0"
+git push origin v0.1.0
 ```
 
-## Configuration and behavior
-
-- Configuration: `$XDG_CONFIG_HOME/olanzi-cross-platform/keymap.json`, or `~/.config/olanzi-cross-platform/keymap.json` when XDG is unset or relative. Preferences live beside it in `preferences.json`.
-- No configuration file is created until an explicit save. Saving six “No action” bindings is a valid configuration that takes over and discards vendor actions.
-- Imports are validated completely, then replace only the draft. Exports use the saved version. Native file dialogs confirm overwrites.
-- Corrupt startup files are preserved. Explicit repair saves first create a unique `keymap.invalid-YYYYMMDD-HHmmss-N.json` backup.
-- Saves run outside the input worker, freeze a complete draft, synchronize the temporary file, and atomically rename it. Save errors retain the draft and previous active mapping. Forwarding errors after a successful save are reported separately.
-- Rotary taps last 40 ms, separated by at least 10 ms, in one FIFO with 32 pending slots. All mapped buttons follow physical edges immediately and release on physical release or runtime stop; they do not block the tap queue. Shared output keys stay pressed until their last owner releases them. A delayed scheduler never compresses multiple overdue edges. Cancellation clears pending actions and retains failed releases as cleanup debt.
-- Only the documented online query, software online/offline handover, and heartbeat commands can be transmitted. No on-device key table, light, firmware, or identifier operations exist.
-- Rotating diagnostics are local, at most two 5 MiB files under the configuration directory's `logs/`. Ordinary keyboard text and mapping contents are not logged. There is no runtime network service or account.
-
-## Layout
-
-| Path | Responsibility |
-|---|---|
-| `ui/` | Bilingual editor, settings, draft UI, isolated browser preview |
-| `src/config.rs`, `src/storage.rs` | Strict format, duplicate rejection, persistence, repair backups |
-| `src/protocol.rs` | Little-endian TEA, exact report boundaries, command allowlist |
-| `src/runtime.rs` | Readiness, handover, edge filtering, FIFO, cleanup debt |
-| `src/linux.rs` | Descriptor-verified hidraw access and uinput keyboard |
-| `src/service.rs` | Background worker, asynchronous saves, model, logs, sleep observation |
-| `src-tauri/` | Native window, single instance, tray, native file dialogs |
-| `tests/` | Deterministic contract and failure-injection tests |
+Use the matching version for future releases. In **Actions → Release → Run workflow**, an existing tag can also be selected for a manual run. Builds use that tag’s source. The workflow uses GitHub’s automatic `GITHUB_TOKEN`; no personal access token is needed. Only the publishing job has `contents: write`. An existing Release is not overwritten; use a new version if one has already been published.
 
 ## Uninstall
 
@@ -99,4 +78,10 @@ sudo sh /usr/share/clanzi/remove-permissions.sh
 sudo apt remove clanzi
 ```
 
-Only this application's rules are removed. User mappings, preferences, and logs are retained. To erase them, remove the configuration directory explicitly after quitting Olanzi. See [troubleshooting](docs/troubleshooting.md).
+User mappings, preferences, and logs are retained. Their locations are documented in [configuration](docs/configuration.md).
+
+## Acknowledgments and license
+
+Thanks to **[MrCroxx/olanzi](https://github.com/MrCroxx/olanzi)** and its contributors for the original Olanzi project, AU05 protocol research, documentation, and reference application. Their work made this Linux implementation possible.
+
+clanzi is licensed under the [MIT License](LICENSE). Upstream copyright and license notices are preserved in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

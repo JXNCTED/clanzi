@@ -1,8 +1,10 @@
 # 11 Olanzi cross platform reference replication specification
 
-> 🌐 [中文](11-cross-platform-replication-spec.zh.md)
+> Reference snapshot from [MrCroxx/olanzi](https://github.com/MrCroxx/olanzi). Current Linux scope and button behavior are documented in [configuration](docs/configuration.md) and [validation status](docs/acceptance.md). See [upstream notices](THIRD_PARTY_NOTICES.md).
 
-> 📚 Documentation: [README](../README.md) · [02 Protocol](02-vibekey-protocol.md) · [09 Reference app](09-native-macos.md) · [10 Reference runtime](10-input-runtime.md) · **11 Cross platform reference replication specification**
+> 🌐 [中文](cross-platform-replication-spec.zh.md)
+
+> 📚 Documentation: [README](README.md) · [02 Protocol](https://github.com/MrCroxx/olanzi/blob/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/02-vibekey-protocol.md) · [09 Reference app](https://github.com/MrCroxx/olanzi/blob/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/09-native-macos.md) · [10 Reference runtime](https://github.com/MrCroxx/olanzi/blob/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/10-input-runtime.md) · **11 Cross platform reference replication specification**
 
 ## 1 Document contract
 
@@ -20,14 +22,14 @@ The reference baseline is repository commit `eb78f88f973d4d28f1d6d3369cdfb65881b
 
 | ID | Material | What it establishes | What it does not establish |
 |---|---|---|---|
-| R1 | [Native app guide](09-native-macos.md) | Editing, drafts and saving, background operation, permission presentation, and import/export semantics | Every described scenario has been verified on hardware |
-| R2 | [Input runtime](10-input-runtime.md) | Control events, action semantics, cancellation, and failure cleanup boundaries | Linux already behaves identically |
-| R3 | [Protocol](02-vibekey-protocol.md) | TEA, frame layout, interface identification, known commands and replies | Unverified write commands are safe to use |
-| R4 | [Heartbeat investigation](07-heartbeat-investigation.md) and linked evidence | Switching between standard input and vendor events; observation and inference boundaries | A successful heartbeat proves the device is online or never sleeps |
-| R5 | [Chinese keymap screenshot](images/keymap-zh.png), [English keymap screenshot](images/keymap-en.png), [settings screenshot](images/device-zh.png) | Visual hierarchy, device orientation, and the relationship between selection and editing areas | Demo screenshots prove hardware connection or working interactions |
-| R6 | [Verification log](05-verification-log.md) | Specific experiments, failed attempts, and confirmed results | Historical partial success proves the whole new product works |
+| R1 | [Native app guide](https://github.com/MrCroxx/olanzi/blob/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/09-native-macos.md) | Editing, drafts and saving, background operation, permission presentation, and import/export semantics | Every described scenario has been verified on hardware |
+| R2 | [Input runtime](https://github.com/MrCroxx/olanzi/blob/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/10-input-runtime.md) | Control events, action semantics, cancellation, and failure cleanup boundaries | Linux already behaves identically |
+| R3 | [Protocol](https://github.com/MrCroxx/olanzi/blob/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/02-vibekey-protocol.md) | TEA, frame layout, interface identification, known commands and replies | Unverified write commands are safe to use |
+| R4 | [Heartbeat investigation](https://github.com/MrCroxx/olanzi/blob/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/07-heartbeat-investigation.md) and linked evidence | Switching between standard input and vendor events; observation and inference boundaries | A successful heartbeat proves the device is online or never sleeps |
+| R5 | [Chinese keymap screenshot](https://raw.githubusercontent.com/MrCroxx/olanzi/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/images/keymap-zh.png), [English keymap screenshot](https://raw.githubusercontent.com/MrCroxx/olanzi/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/images/keymap-en.png), [settings screenshot](https://raw.githubusercontent.com/MrCroxx/olanzi/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/images/device-zh.png) | Visual hierarchy, device orientation, and the relationship between selection and editing areas | Demo screenshots prove hardware connection or working interactions |
+| R6 | [Verification log](https://github.com/MrCroxx/olanzi/blob/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/05-verification-log.md) | Specific experiments, failed attempts, and confirmed results | Historical partial success proves the whole new product works |
 
-![Reference keymap screen with demo data](images/keymap-zh.png)
+![Reference keymap screen with demo data](https://raw.githubusercontent.com/MrCroxx/olanzi/eb78f88f973d4d28f1d6d3369cdfb65881b1e1c6/docs/images/keymap-zh.png)
 
 The screenshot supplies layout and visual reference only. Preserve the relationship of device and controls above, action editing below, and separate settings. Remove the layers, gesture columns, APP, and macro areas excluded by this specification. Pixel identity, original fonts, icons, and asset files are not required.
 

@@ -28,7 +28,7 @@ try {
   assert.equal(await page.getByRole('group', { name: 'Button behavior' }).count(), 0);
   assert(await page.getByRole('button', { name: 'Undo changes' }).isDisabled());
   assert(await page.getByRole('button', { name: 'Ctrl', exact: true }).isDisabled());
-  await page.getByRole('button', { name: 'Letters', exact: true }).click();
+  await page.getByRole('button', { name: /Letters$/ }).click();
   await page.getByRole('button', { name: 'C', exact: true }).click();
   await page.getByRole('button', { name: 'Ctrl', exact: true }).click();
   await waitState(() => document.querySelector('.combination')?.textContent?.includes('Ctrl+C'));

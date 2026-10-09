@@ -9,3 +9,16 @@
 /.aws/
 /.codex/
 *.log
+
+# Local credentials and private keys
+.env
+.env.*
+!.env.example
+!.env.sample
+/.npmrc
+/.netrc
+/.ssh/
+*.pem
+*.key
+*.p12
+*.pfx

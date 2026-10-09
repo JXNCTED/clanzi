@@ -6,6 +6,7 @@ demo:
 test:
 	cargo test --offline
 	node tests/frontend.test.mjs
+	node tests/release-version.test.mjs
 check:
 	cargo fmt --all -- --check
 	cargo clippy --offline --all-targets -- -D warnings

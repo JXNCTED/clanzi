@@ -23,6 +23,8 @@
     "linux": { "deb": {
       "depends": ["libwebkit2gtk-4.1-0", "libgtk-3-0", "libayatana-appindicator3-1", "dbus-bin"],
       "files": {
+        "/usr/share/doc/clanzi/LICENSE": "../LICENSE",
+        "/usr/share/doc/clanzi/THIRD_PARTY_NOTICES.md": "../THIRD_PARTY_NOTICES.md",
         "/usr/share/clanzi/70-clanzi.rules": "../packaging/70-clanzi.rules",
         "/usr/share/clanzi/install-permissions.sh": "../packaging/install-permissions.sh",
         "/usr/share/clanzi/remove-permissions.sh": "../packaging/remove-permissions.sh"

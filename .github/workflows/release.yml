@@ -1,0 +1,105 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing release tag, for example v0.1.0'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+env:
+  RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Validate tag format
+        shell: bash
+        run: |
+          if [[ ! "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo '::error::Release tags must use vMAJOR.MINOR.PATCH.'
+            exit 1
+          fi
+      - uses: actions/checkout@v4
+        with:
+          ref: refs/tags/${{ env.RELEASE_TAG }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev
+      - run: npm ci
+      - run: cargo fetch --locked
+      - run: cargo fetch --manifest-path src-tauri/Cargo.toml --locked
+      - name: Check package versions against tag
+        id: version
+        run: |
+          version=$(node tools/release-version.mjs "$RELEASE_TAG")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - run: make check
+      - run: cargo clippy --manifest-path src-tauri/Cargo.toml --offline --all-targets -- -D warnings
+      - run: npm exec playwright install --with-deps chromium
+      - run: node tools/ui-smoke.mjs
+      - run: make deb
+      - name: Verify package and generate checksum
+        working-directory: artifacts
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          package="clanzi_${VERSION}_amd64.deb"
+          test "$(dpkg-deb -f "$package" Version)" = "$VERSION"
+          test "$(dpkg-deb -f "$package" Architecture)" = amd64
+          sha256sum "$package" > SHA256SUMS
+          sha256sum --check SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-linux-amd64
+          path: |
+            artifacts/clanzi_${{ steps.version.outputs.version }}_amd64.deb
+            artifacts/SHA256SUMS
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-linux-amd64
+          path: release
+      - name: Publish GitHub Release
+        working-directory: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          sha256sum --check SHA256SUMS
+          gh release create "$RELEASE_TAG" \
+            "clanzi_${VERSION}_amd64.deb" SHA256SUMS \
+            --verify-tag --generate-notes --title "clanzi $RELEASE_TAG"

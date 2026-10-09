@@ -5,6 +5,7 @@ if [ "$(uname -m)" != x86_64 ]; then
   echo 'This package targets Linux x86_64.' >&2
   exit 1
 fi
+version=$(node tools/release-version.mjs)
 npm run build
 cargo build --manifest-path src-tauri/Cargo.toml --release --features custom-protocol --locked
 stage=$(mktemp -d)
@@ -18,6 +19,8 @@ install -Dm755 packaging/install-permissions.sh "$stage/usr/share/clanzi/install
 install -Dm755 packaging/remove-permissions.sh "$stage/usr/share/clanzi/remove-permissions.sh"
 install -Dm644 README.md "$stage/usr/share/doc/clanzi/README.md"
 install -Dm644 README.zh.md "$stage/usr/share/doc/clanzi/README.zh.md"
+install -Dm644 LICENSE "$stage/usr/share/doc/clanzi/LICENSE"
+install -Dm644 THIRD_PARTY_NOTICES.md "$stage/usr/share/doc/clanzi/THIRD_PARTY_NOTICES.md"
 for doc in docs/*.md; do
   install -Dm644 "$doc" "$stage/usr/share/doc/clanzi/$doc"
 done
@@ -26,9 +29,9 @@ for doc in cross-platform-replication-spec.md cross-platform-replication-spec.zh
 done
 install -Dm644 examples/keymap.json "$stage/usr/share/doc/clanzi/examples/keymap.json"
 mkdir -p "$stage/DEBIAN" artifacts
-cat > "$stage/DEBIAN/control" <<'CONTROL'
+cat > "$stage/DEBIAN/control" <<CONTROL
 Package: clanzi
-Version: 0.1.0
+Version: $version
 Section: utils
 Priority: optional
 Architecture: amd64
@@ -37,4 +40,4 @@ Depends: libwebkit2gtk-4.1-0, libgtk-3-0, libayatana-appindicator3-1, dbus-bin, 
 Description: Olanzi AU05 desktop key mapper
  Local Linux key mappings, background forwarding, and an offline editor.
 CONTROL
-dpkg-deb --root-owner-group --build "$stage" artifacts/clanzi_0.1.0_amd64.deb
+dpkg-deb --root-owner-group --build "$stage" "artifacts/clanzi_${version}_amd64.deb"
