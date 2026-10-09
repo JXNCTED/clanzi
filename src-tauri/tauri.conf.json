@@ -1,0 +1,32 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Olanzi",
+  "version": "0.1.0",
+  "identifier": "io.clanzi.desktop",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [{ "label": "main", "title": "Olanzi", "width": 1120, "height": 860, "minWidth": 520, "minHeight": 420, "backgroundColor": "#101112" }],
+    "security": { "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' asset: data:; connect-src ipc: http://ipc.localhost; script-src 'self'" }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["deb"],
+    "category": "Utility",
+    "shortDescription": "Local AU05 keyboard mapping for Linux",
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/icon.png"],
+    "linux": { "deb": {
+      "depends": ["libwebkit2gtk-4.1-0", "libgtk-3-0", "libayatana-appindicator3-1", "dbus-bin"],
+      "files": {
+        "/usr/share/clanzi/70-clanzi.rules": "../packaging/70-clanzi.rules",
+        "/usr/share/clanzi/install-permissions.sh": "../packaging/install-permissions.sh",
+        "/usr/share/clanzi/remove-permissions.sh": "../packaging/remove-permissions.sh"
+      }
+    }}
+  }
+}

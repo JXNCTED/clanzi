@@ -1,0 +1,5 @@
+# Only the AU05 vendor interface; never grant access to physical keyboards.
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="fff1", ATTRS{idProduct}=="00dd", IMPORT{builtin}="usb_id"
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="fff1", ATTRS{idProduct}=="00dd", ENV{ID_USB_INTERFACE_NUM}=="03", TAG+="uaccess"
+# logind grants the active local session access to the virtual-input endpoint.
+SUBSYSTEM=="misc", KERNEL=="uinput", OPTIONS+="static_node=uinput", TAG+="uaccess"

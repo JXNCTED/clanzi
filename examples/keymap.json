@@ -1,0 +1,13 @@
+{
+  "format": "olanzi-cross-platform-keymap",
+  "version": 1,
+  "device": "AU05",
+  "bindings": {
+    "key_top": { "kind": "key", "usage": 4, "modifiers": [] },
+    "key_middle": { "kind": "key", "usage": 5, "modifiers": [] },
+    "key_bottom": { "kind": "key", "usage": 6, "modifiers": [] },
+    "knob_press": { "kind": "key", "usage": 7, "modifiers": [] },
+    "knob_right": { "kind": "key", "usage": 79, "modifiers": [] },
+    "knob_left": { "kind": "key", "usage": 80, "modifiers": [] }
+  }
+}
