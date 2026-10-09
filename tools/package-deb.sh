@@ -38,7 +38,7 @@ Priority: optional
 Architecture: amd64
 Maintainer: Clanzi contributors
 Depends: libwebkit2gtk-4.1-0, libgtk-3-0, libayatana-appindicator3-1, dbus-bin, udev, kmod
-Description: Olanzi AU05 desktop key mapper
+Description: clanzi AU05 desktop key mapper
  Local Linux key mappings, background forwarding, and an offline editor.
 CONTROL
 dpkg-deb --root-owner-group --build "$stage" "artifacts/clanzi_${version}_amd64.deb"

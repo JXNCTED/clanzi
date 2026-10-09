@@ -2,6 +2,8 @@
 
 [中文](configuration.zh.md) · [README](../README.md)
 
+The application is named **clanzi**. The existing configuration directory and JSON format identifier retain their historical names for compatibility with saved settings and exports. New exports use the `clanzi-keymap-` filename prefix.
+
 ## Files and persistence
 
 Configuration lives in `$XDG_CONFIG_HOME/olanzi-cross-platform/`, or `~/.config/olanzi-cross-platform/` when XDG is unset or relative:

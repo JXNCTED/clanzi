@@ -44,6 +44,6 @@ This is not a complete physical-state snapshot. The protocol provides no timesta
 | Vite is unavailable in a debug native run | Start `npm run dev` in another terminal, or use the release binary with embedded assets. |
 | UI test browser is missing | Run `npm exec playwright install chromium`. A compatible existing browser can be selected with `PLAYWRIGHT_CHROMIUM_EXECUTABLE`. |
 | Browser exits with `Operation not permitted` | Run the UI test in an ordinary desktop/CI environment; some sandboxes block Chromium IPC. |
-| No tray icon on GNOME | Start Olanzi again. The existing instance reopens its window. |
+| No tray icon on GNOME | Start clanzi again. The existing instance reopens its window. |
 
 The application observes logind's `PrepareForSleep` through `dbus-monitor`; failed monitor startup is logged as `SLEEP_MONITOR_FAILED`. The current implementation does not hold a logind delay inhibitor. Pre-sleep cleanup timing therefore still requires real desktop verification.

@@ -1,10 +1,10 @@
 [Desktop Entry]
 Type=Application
-Name=Olanzi
+Name=clanzi
 Comment=Local AU05 keyboard mapping
 Comment[zh_CN]=AU05 本机键盘映射
 Exec=clanzi
 Icon=clanzi
 Terminal=false
 Categories=Utility;
-StartupWMClass=Olanzi
+StartupWMClass=clanzi

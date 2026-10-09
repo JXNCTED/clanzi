@@ -2,6 +2,8 @@
 
 [English](configuration.md) · [README](../README.zh.md)
 
+应用名称统一为 **clanzi**。已有配置目录和 JSON 格式标识保留历史名称，以兼容现有设置与导出文件；新导出文件使用 `clanzi-keymap-` 文件名前缀。
+
 ## 文件与保存
 
 配置位于 `$XDG_CONFIG_HOME/olanzi-cross-platform/`；XDG 未设置或为相对路径时使用 `~/.config/olanzi-cross-platform/`：

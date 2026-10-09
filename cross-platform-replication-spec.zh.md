@@ -1,6 +1,6 @@
 # 11 Olanzi 跨平台参考重建规格
 
-> 本参考快照来自 [MrCroxx/olanzi](https://github.com/MrCroxx/olanzi)。当前 Linux 范围及按钮行为见[配置说明](docs/configuration.zh.md)和[验证状态](docs/acceptance.zh.md)。另见[上游声明](THIRD_PARTY_NOTICES.md)。
+> 本参考快照来自 [MrCroxx/olanzi](https://github.com/MrCroxx/olanzi)。当前应用名称为 clanzi；下文历史名称属于上游参考快照。当前 Linux 范围及按钮行为见[配置说明](docs/configuration.zh.md)和[验证状态](docs/acceptance.zh.md)。另见[上游声明](THIRD_PARTY_NOTICES.md)。
 
 > 🌐 [English](cross-platform-replication-spec.md)
 

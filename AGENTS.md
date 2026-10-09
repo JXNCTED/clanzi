@@ -2,7 +2,7 @@
 
 ## 项目与范围
 
-- clanzi 是 AU05 的 Linux 桌面键位映射工具，界面名称为 Olanzi。
+- clanzi 是 AU05 的 Linux 桌面键位映射工具，界面名称为 clanzi。
 - 使用 Tauri 2、React、TypeScript 和 Rust；当前不使用 Qt，不实现 macOS。
 - 先读 `README.zh.md`、`docs/configuration.zh.md` 和 `docs/acceptance.zh.md`。原始规格位于 `cross-platform-replication-spec.zh.md`，参考项目位于 `../olanzi`（若存在）。
 - 当前实现与原始规格的差异：三个按钮和旋钮按下直接跟随物理按下/松开，不提供点按/长按模式选择，不等待长按阈值。旋转方向仍发送定时点按。

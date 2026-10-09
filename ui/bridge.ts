@@ -49,5 +49,5 @@ export async function chooseImport(): Promise<string | null> {
 export async function exportSaved(map: Keymap): Promise<boolean> {
   if (native) return window.__TAURI__!.core.invoke('export_file');
   const url = URL.createObjectURL(new Blob([JSON.stringify(map, null, 2)], { type: 'application/json' }));
-  const anchor = document.createElement('a'); anchor.href = url; anchor.download = `olanzi-keymap-${new Date().toISOString().replace(/[:.]/g, '-')}.json`; anchor.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); return true;
+  const anchor = document.createElement('a'); anchor.href = url; anchor.download = `clanzi-keymap-${new Date().toISOString().replace(/[:.]/g, '-')}.json`; anchor.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); return true;
 }

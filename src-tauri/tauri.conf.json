@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Olanzi",
+  "productName": "clanzi",
   "version": "0.1.0",
   "identifier": "io.clanzi.desktop",
   "build": {
@@ -11,7 +11,7 @@
   },
   "app": {
     "withGlobalTauri": true,
-    "windows": [{ "label": "main", "title": "Olanzi", "width": 1120, "height": 860, "minWidth": 520, "minHeight": 420, "backgroundColor": "#101112" }],
+    "windows": [{ "label": "main", "title": "clanzi", "width": 1120, "height": 860, "minWidth": 520, "minHeight": 420, "backgroundColor": "#101112" }],
     "security": { "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' asset: data:; connect-src ipc: http://ipc.localhost; script-src 'self'" }
   },
   "bundle": {

@@ -71,7 +71,7 @@ try {
   await chooser.setFiles('examples/keymap.json');
   await page.getByRole('dialog').waitFor();
   await page.getByRole('button', { name: 'Cancel', exact: true }).click();
-  await page.getByRole('button', { name: 'Quit Olanzi', exact: true }).click();
+  await page.getByRole('button', { name: 'Quit clanzi', exact: true }).click();
   await page.getByRole('heading', { name: 'Save your changes before leaving?' }).waitFor();
   await page.getByRole('button', { name: 'Cancel', exact: true }).click();
   await page.screenshot({ path: 'artifacts/settings-en.png', fullPage: true });

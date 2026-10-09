@@ -38,7 +38,7 @@ async fn import_file(app: tauri::AppHandle) -> Result<Option<String>, String> {
         let selected = app
             .dialog()
             .file()
-            .add_filter("Olanzi keymap", &["json"])
+            .add_filter("clanzi keymap", &["json"])
             .blocking_pick_file();
         let Some(path) = selected else {
             return Ok(None);
@@ -68,8 +68,8 @@ async fn export_file(app: tauri::AppHandle) -> Result<bool, String> {
         let selected = app
             .dialog()
             .file()
-            .add_filter("Olanzi keymap", &["json"])
-            .set_file_name(format!("olanzi-keymap-{}.json", timestamp()))
+            .add_filter("clanzi keymap", &["json"])
+            .set_file_name(format!("clanzi-keymap-{}.json", timestamp()))
             .blocking_save_file();
         let Some(path) = selected else {
             return Ok(false);
@@ -118,14 +118,14 @@ fn main() {
                 service: Mutex::new(Service::start(demo, None)),
                 exiting: AtomicBool::new(false),
             });
-            let open = MenuItem::with_id(app, "open", "Open Olanzi", true, None::<&str>)?;
+            let open = MenuItem::with_id(app, "open", "Open clanzi", true, None::<&str>)?;
             let pause = MenuItem::with_id(app, "pause", "Pause", true, None::<&str>)?;
             let status = MenuItem::with_id(app, "status", "Starting", false, None::<&str>)?;
             let quit = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&status, &open, &pause, &quit])?;
             let mut tray = TrayIconBuilder::new()
                 .menu(&menu)
-                .tooltip("Olanzi")
+                .tooltip("clanzi")
                 .on_menu_event(|app, event| match event.id.as_ref() {
                     "open" => show(app),
                     "pause" => {
@@ -157,7 +157,7 @@ fn main() {
                         break;
                     }
                     let zh = model.language == "zh";
-                    let _ = open.set_text(if zh { "打开 Olanzi" } else { "Open Olanzi" });
+                    let _ = open.set_text(if zh { "打开 clanzi" } else { "Open clanzi" });
                     let _ = quit.set_text(if zh { "退出" } else { "Quit" });
                     let _ = pause.set_text(match (zh, model.runtime.paused) {
                         (true, true) => "恢复转发",
@@ -204,7 +204,7 @@ fn main() {
             }
         })
         .build(context)
-        .expect("failed to start Olanzi desktop");
+        .expect("failed to start clanzi desktop");
     app.run(|handle, event| {
         if let tauri::RunEvent::ExitRequested { api, .. } = event {
             if !handle.state::<Desktop>().exiting.load(Ordering::SeqCst) {

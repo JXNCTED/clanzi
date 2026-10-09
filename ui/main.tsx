@@ -39,7 +39,7 @@ function App() {
       finally { pending.current--; if (!pending.current) await refresh(); }
     });
   }, [refresh]);
-  if (!model) return <div className="loading"><LoaderCircle className="spin"/><span>Olanzi</span>{localError && <p role="alert">{localError.detail}</p>}</div>;
+  if (!model) return <div className="loading"><LoaderCircle className="spin"/><span>clanzi</span>{localError && <p role="alert">{localError.detail}</p>}</div>;
   const t = text[model.language];
   const tr = (key: string) => (t as Record<string, string>)[key] ?? key;
   const action = model.draft.bindings[selected];
@@ -73,7 +73,7 @@ function App() {
   const dirtyLabel = model.saving ? t.saving : model.dirty ? t.unsaved : !model.saved ? t.newMap : runtime.forwarding ? t.saved : t.savedWaiting;
 
   return <div className="app-shell">
-    <header className="topbar"><a className="brand" href="#" onClick={e => { e.preventDefault(); setPage('keymap'); }} aria-label="Olanzi"><span className="brand-mark"><span/><span/><span/></span>olanzi<span className="platform">LINUX</span></a>
+    <header className="topbar"><a className="brand" href="#" onClick={e => { e.preventDefault(); setPage('keymap'); }} aria-label="clanzi"><span className="brand-mark"><span/><span/><span/></span>clanzi<span className="platform">LINUX</span></a>
       <nav className="page-nav" aria-label={model.language === 'zh' ? '主导航' : 'Main navigation'}><button onClick={() => setPage('keymap')} aria-current={page === 'keymap' ? 'page' : undefined}><Keyboard size={17}/>{t.keymap}</button><button onClick={() => setPage('settings')} aria-current={page === 'settings' ? 'page' : undefined}><Settings size={17}/>{t.settings}</button></nav>
       <button className={`status-pill ${runtime.forwarding ? 'active' : ''}`} onClick={() => setPage('settings')}><span className="status-dot"/>{status}<ChevronRight size={13}/></button>
     </header>
@@ -101,7 +101,7 @@ function App() {
           <div className="combination-row"><div className="combination"><span className="eyebrow">{t.preview}</span><span>{action.kind === 'none' ? <span className="none-preview">—</span> : combo(action, model.language).split(' + ').map((part, i) => <React.Fragment key={i}>{i > 0 && <b>+</b>}<kbd>{part}</kbd></React.Fragment>)}</span></div><button className={`no-action ${action.kind === 'none' ? 'is-none' : ''}`} disabled={model.saving} onClick={() => update({ kind: 'none' })} title={t.noActionHelp}><CircleSlash size={15}/>{t.noAction}</button></div>
         </section>
       </> : <>
-        <section className="workspace-heading"><div><div className="eyebrow">OLANZI <span>/</span> {t.settings.toUpperCase()}</div><h1>{t.settingsTitle}</h1><p>{t.settingsSubtitle}</p></div><SlidersHorizontal className="settings-glyph" size={30}/></section>
+        <section className="workspace-heading"><div><div className="eyebrow">clanzi <span>/</span> {t.settings.toUpperCase()}</div><h1>{t.settingsTitle}</h1><p>{t.settingsSubtitle}</p></div><SlidersHorizontal className="settings-glyph" size={30}/></section>
         <div className="settings-grid">
           <section className="settings-card"><h2><Usb size={19}/>{t.connection}</h2><dl><div><dt>{t.receiver}</dt><dd>{runtime.connected ? t.detected : t.missing}</dd></div><div><dt>{t.device}</dt><dd>{tr(runtime.online)}</dd></div><div><dt>{t.action}</dt><dd className={runtime.forwarding ? 'accent-text' : ''}>{status}</dd></div></dl><div className="button-row"><button className="secondary" onClick={() => send({ type: 'retry' })}><RotateCcw size={15}/>{t.retry}</button><button className="secondary" onClick={() => send({ type: 'pause', paused: !runtime.paused })}>{runtime.paused ? <Play size={15}/> : <Pause size={15}/>} {runtime.paused ? t.resume : t.pause}</button></div><p>{t.pausedHint}</p></section>
           <section className="settings-card"><h2><ShieldCheck size={19}/>{t.permissions}</h2><p>{t.permissionsText}</p><p>{t.permissionsHelp}</p></section>

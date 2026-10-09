@@ -240,7 +240,7 @@ impl UInput {
         }
         // Linux uinput_setup 的稳定 ABI；不用普通键盘事件节点，不监听文本。
         let mut descriptor = [0u8; 92];
-        let name = b"Olanzi virtual keyboard";
+        let name = b"clanzi virtual keyboard";
         descriptor[8..8 + name.len()].copy_from_slice(name);
         descriptor[..2].copy_from_slice(&6u16.to_ne_bytes()); // BUS_VIRTUAL
         if unsafe { libc::ioctl(file.as_raw_fd(), 0x405c5503, descriptor.as_ptr()) } < 0 {

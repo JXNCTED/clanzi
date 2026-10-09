@@ -9,7 +9,7 @@ A local Linux x86_64 desktop mapper for Ulanzi Vibe Key (AU05), built with **Tau
 - Edit offline, save locally, and import/export JSON configurations.
 - Keep mappings active in the background, with an English or Chinese interface.
 
-The desktop UI displays the name **Olanzi**. Closing the window keeps forwarding active; use **Settings → Quit Olanzi** to exit. Linux desktop and hardware validation is still incomplete; see [validation status](docs/acceptance.md).
+The desktop UI displays the name **clanzi**. Closing the window keeps forwarding active; use **Settings → Quit clanzi** to exit. Linux desktop and hardware validation is still incomplete; see [validation status](docs/acceptance.md).
 
 ## Build and run
 
@@ -76,7 +76,7 @@ Use the matching version for future releases. In **Actions → Release → Run w
 sudo apt remove clanzi
 ```
 
-The package manager automatically removes the packaged permission rules and boot-time module configuration. Quit Olanzi before uninstalling; an already running process may retain open device handles. User mappings, preferences, and logs are retained. Their locations are documented in [configuration](docs/configuration.md).
+The package manager automatically removes the packaged permission rules and boot-time module configuration. Quit clanzi before uninstalling; an already running process may retain open device handles. User mappings, preferences, and logs are retained. Their locations are documented in [configuration](docs/configuration.md).
 
 ## Acknowledgments and license
 
