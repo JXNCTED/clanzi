@@ -25,7 +25,9 @@ Build environment: Ubuntu 22.04.5 x86_64, kernel 6.8, Rust 1.96.1, Node.js 24.14
 | Tauri native compilation | Passed | Desktop `cargo check` and release build with `custom-protocol` |
 | Example exchange file | Passed | `clanzi-validate examples/keymap.json` |
 | Desktop entry and shell syntax | Passed | `desktop-file-validate`; `sh -n` |
+| Permission lifecycle scripts | Passed, 8 isolated tests | `python3 tests/packaging.test.py`; temporary filesystem and fake modprobe/udevadm, no host permissions changed |
 | Debian package | Built; not installed | `artifacts/clanzi_0.1.0_amd64.deb`; `dpkg-deb` inspection |
+| Tauri CLI packaging entry | Not verified: CLI absent from npm cache | `make deb` succeeded; optional `npm run tauri -- build --bundles deb` requires fetching the CLI |
 | Browser UI interactions | Passed | `tools/ui-smoke.mjs` with headless Chromium outside the sandbox; native WebKit window remains unverified |
 | Native graphical startup | Blocked; not passed | GTK initialization fails without a display; attempted only `--demo` |
 
@@ -69,7 +71,7 @@ The Playwright script in `tools/ui-smoke.mjs` covers draft editing, modifier ret
 ## Hardware procedure
 
 1. Record application version, session (`Wayland` or `Xorg`), AU05 firmware if available, wall-clock time, and local log paths. Close other AU05 applications.
-2. Install the permission rules; reconnect one receiver. Import `examples/keymap.json`, then explicitly save. Verify status reaches Forwarding.
+2. Install the `.deb` and verify automatic permission setup; reconnect one receiver. Import `examples/keymap.json`, then explicitly save. Verify status reaches Forwarding.
 3. Focus an empty text editor or input event viewer. Press top, wait one second; middle, wait one second; bottom, wait one second; knob press, wait one second; rotate right one detent, wait one second; rotate left one detent. Repeat 20 times. Do not hold the power button.
 4. Test Ctrl+C, Shift+Tab, Alt+Left and a suitable Super shortcut, including interleaved physical modifiers. Check short presses and sustained holds, their down/up timing, and Handy push-to-talk.
 5. While a synthetic chord is active, test pause, disconnect, configuration replacement, permissions loss and quit. Check no queued action is replayed and failed releases remain visible.

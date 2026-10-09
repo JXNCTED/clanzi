@@ -22,11 +22,10 @@ cargo fetch --locked
 cargo fetch --manifest-path src-tauri/Cargo.toml --locked
 make deb
 sudo apt install ./artifacts/clanzi_0.1.0_amd64.deb
-sudo sh /usr/share/clanzi/install-permissions.sh
 clanzi
 ```
 
-安装权限规则后重新插拔接收器，再选择**设置 → 重试连接**。以普通桌面用户运行 GUI，并退出其他 AU05 客户端。规则只为当前本地会话授权 AU05 厂商接口和 `/dev/uinput`，不开放物理键盘事件节点。
+`.deb` 安装时会自动配置权限规则并启用 uinput 模块，无需额外执行脚本。安装后重新插拔接收器，再选择**设置 → 重试连接**。以普通桌面用户运行 GUI，并退出其他 AU05 客户端。规则只为当前本地会话授权 AU05 厂商接口和 `/dev/uinput`，不开放物理键盘事件节点。
 
 更新前先退出正在运行的实例。重新构建后可运行 `./src-tauri/target/release/clanzi`，或通过 `sudo apt install --reinstall ./artifacts/clanzi_0.1.0_amd64.deb` 重新安装软件包。
 
@@ -53,7 +52,7 @@ node tools/ui-smoke.mjs
 | `src/` | 配置、存储、协议、运行时、hidraw/uinput 和工作线程 |
 | `src-tauri/` | 原生窗口、托盘、单实例和文件对话框 |
 | `tests/`、`tools/` | 确定性测试、UI 验证与打包 |
-| `packaging/` | 桌面入口和权限安装脚本 |
+| `packaging/` | 桌面入口、权限规则和软件包生命周期脚本 |
 
 [参考规格](cross-platform-replication-spec.zh.md)记录上游设计基线。当前 Linux 行为及差异见[配置说明](docs/configuration.zh.md)和[验证状态](docs/acceptance.zh.md)。
 
@@ -74,11 +73,10 @@ git push origin v0.1.0
 ## 卸载
 
 ```sh
-sudo sh /usr/share/clanzi/remove-permissions.sh
 sudo apt remove clanzi
 ```
 
-保留用户映射、偏好和日志，文件位置见[配置说明](docs/configuration.zh.md)。
+包管理器会自动移除随包安装的权限规则和模块开机加载配置。卸载前请退出 Olanzi；仍在运行的进程可能保留已打开的设备句柄。保留用户映射、偏好和日志，文件位置见[配置说明](docs/configuration.zh.md)。
 
 ## 致谢与许可证
 

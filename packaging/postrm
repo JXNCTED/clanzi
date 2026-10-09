@@ -1,0 +1,17 @@
+#!/bin/sh
+set -eu
+
+# During upgrades the replacement package already owns the rules.
+case "${1:-}" in
+  remove|purge) ;;
+  *) exit 0 ;;
+esac
+
+# dpkg has removed the packaged rules. Dependencies may also have been removed.
+if command -v udevadm >/dev/null 2>&1 && [ -d /run/udev ]; then
+  if ! udevadm control --reload-rules ||
+     ! udevadm trigger --subsystem-match=misc --sysname-match=uinput ||
+     ! udevadm trigger --subsystem-match=hidraw; then
+    echo 'clanzi: permissions could not be refreshed; restart and reconnect the receiver.' >&2
+  fi
+fi

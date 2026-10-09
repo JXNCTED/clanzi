@@ -6,9 +6,11 @@
 
 ## 接收器和输出是两种权限
 
-`PERMISSION_REQUIRED` 附带问题区域：`receiver` 表示 AU05 厂商 hidraw 节点，`output` 表示 `/dev/uinput`。安装软件包中的规则，重新插拔接收器，以正常登录的桌面用户重试。SSH 会话可能没有 logind 的活动席位 ACL。不要将 `/dev/input/*` 开放给所有人，也不要以 root 运行界面。
+`PERMISSION_REQUIRED` 附带问题区域：`receiver` 表示 AU05 厂商 hidraw 节点，`output` 表示 `/dev/uinput`。安装或重新安装 `.deb`（会自动配置权限），重新插拔接收器，以正常登录的桌面用户重试。SSH 会话可能没有 logind 的活动席位 ACL。不要将 `/dev/input/*` 开放给所有人，也不要以 root 运行界面。
 
 目标接收器使用 VID `0xFFF1`、PID `0x00DD`、厂商 Usage Page `0xFFFC` 和 Report ID `0x55`。运行时核对实际报告描述符。随附 udev 规则针对已记录的 USB 接口 `03`；接口或描述符变化需要单独验证。
+
+从旧版手动权限安装器升级时，会移除 `/etc/udev/rules.d/70-clanzi.rules` 和 `/etc/modules-load.d/clanzi.conf` 中未修改的副本，改用包管理器维护的 `/usr/lib` 文件。已修改的文件和符号链接作为本地覆盖保留，卸载时也不会删除。开发版可使用已安装 `.deb` 配置的权限。如果安装过程提示模块或规则未能立即启用，请重启并重新插拔后重试。
 
 ## 状态与恢复
 

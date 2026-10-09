@@ -1,0 +1,24 @@
+#!/bin/sh
+set -eu
+
+[ "${1:-}" = configure ] || exit 0
+
+# Migrate unchanged files left by the old manual installer. Keep local overrides.
+for file in udev/rules.d/70-clanzi.rules modules-load.d/clanzi.conf; do
+  if [ ! -L "/etc/$file" ] && cmp -s "/etc/$file" "/usr/lib/$file"; then
+    rm -f "/etc/$file"
+  fi
+done
+
+if ! modprobe uinput; then
+  echo 'clanzi: uinput could not be loaded; restart before using keyboard output.' >&2
+fi
+
+# A package can be configured without a running udev daemon (e.g. in a chroot).
+if command -v udevadm >/dev/null 2>&1 && [ -d /run/udev ]; then
+  if ! udevadm control --reload-rules ||
+     ! udevadm trigger --subsystem-match=misc --sysname-match=uinput ||
+     ! udevadm trigger --subsystem-match=hidraw; then
+    echo 'clanzi: permissions could not be refreshed; restart and reconnect the receiver.' >&2
+  fi
+fi

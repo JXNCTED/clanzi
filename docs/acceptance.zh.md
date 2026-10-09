@@ -25,7 +25,9 @@
 | Tauri 原生编译 | 通过 | 桌面 `cargo check` 和启用 `custom-protocol` 的发布构建 |
 | 交换格式样例 | 通过 | `clanzi-validate examples/keymap.json` |
 | 桌面入口与脚本语法 | 通过 | `desktop-file-validate`；`sh -n` |
+| 权限生命周期脚本 | 通过，8 项隔离测试 | `python3 tests/packaging.test.py`；临时文件系统与模拟 modprobe/udevadm，未更改本机权限 |
 | Debian 软件包 | 已构建，未安装 | `artifacts/clanzi_0.1.0_amd64.deb`；`dpkg-deb` 检查 |
+| Tauri CLI 打包入口 | 未验证：npm 缓存中缺少 CLI | `make deb` 已通过；可选的 `npm run tauri -- build --bundles deb` 需要先下载 CLI |
 | 浏览器 UI 交互 | 通过 | `tools/ui-smoke.mjs` 在沙箱外使用无头 Chromium 执行；原生 WebKit 窗口仍未验证 |
 | 原生图形启动 | 受阻，未通过 | 没有显示环境，GTK 初始化失败；只尝试了 `--demo` |
 
@@ -69,7 +71,7 @@
 ## 硬件验证步骤
 
 1. 记录应用版本、会话（`Wayland` 或 `Xorg`）、可获得的 AU05 固件、实际时间及本机日志路径。退出其他 AU05 应用。
-2. 安装权限规则，重新插入一个接收器。导入 `examples/keymap.json` 并明确保存，确认状态达到转发中。
+2. 安装 `.deb` 并验证自动权限配置，重新插入一个接收器。导入 `examples/keymap.json` 并明确保存，确认状态达到转发中。
 3. 聚焦空白文本编辑器或输入事件查看器。按顶部键，等一秒；中部键，等一秒；底部键，等一秒；旋钮按下，等一秒；右转一格，等一秒；左转一格。重复 20 次，不长按电源键。
 4. 在能观察相应效果的应用里测试 Ctrl+C、Shift+Tab、Alt+Left 及合适的 Super 快捷键，并交错真实修饰键。检查短按和持续按住的按下/松开时序，并测试 Handy 按住说话。
 5. 合成组合键处于按下期间，测试暂停、断连、替换配置、撤销权限和退出；检查不补发旧动作，释放失败保持可见。

@@ -22,11 +22,10 @@ cargo fetch --locked
 cargo fetch --manifest-path src-tauri/Cargo.toml --locked
 make deb
 sudo apt install ./artifacts/clanzi_0.1.0_amd64.deb
-sudo sh /usr/share/clanzi/install-permissions.sh
 clanzi
 ```
 
-Reconnect the receiver after installing permissions, then select **Settings → Retry connection**. Run the GUI as your normal desktop user and close other AU05 clients. The rules grant the active local session access to the AU05 vendor interface and `/dev/uinput`; they do not grant access to physical keyboard event nodes.
+The `.deb` automatically installs permission rules and enables the uinput module. Reconnect the receiver after installation, then select **Settings → Retry connection**. Run the GUI as your normal desktop user and close other AU05 clients. The rules grant the active local session access to the AU05 vendor interface and `/dev/uinput`; they do not grant access to physical keyboard event nodes.
 
 To update, quit the running instance first. After rebuilding, run `./src-tauri/target/release/clanzi`, or reinstall the package with `sudo apt install --reinstall ./artifacts/clanzi_0.1.0_amd64.deb`.
 
@@ -53,7 +52,7 @@ node tools/ui-smoke.mjs
 | `src/` | Configuration, storage, protocol, runtime, hidraw/uinput, worker service |
 | `src-tauri/` | Native window, tray, single instance, file dialogs |
 | `tests/`, `tools/` | Deterministic tests, UI smoke test, package build |
-| `packaging/` | Desktop entry and permission installers |
+| `packaging/` | Desktop entry, permission rules, and package lifecycle scripts |
 
 The [reference specification](cross-platform-replication-spec.md) records the upstream design baseline. Current Linux behavior and deviations are documented in [configuration](docs/configuration.md) and [validation status](docs/acceptance.md).
 
@@ -74,11 +73,10 @@ Use the matching version for future releases. In **Actions → Release → Run w
 ## Uninstall
 
 ```sh
-sudo sh /usr/share/clanzi/remove-permissions.sh
 sudo apt remove clanzi
 ```
 
-User mappings, preferences, and logs are retained. Their locations are documented in [configuration](docs/configuration.md).
+The package manager automatically removes the packaged permission rules and boot-time module configuration. Quit Olanzi before uninstalling; an already running process may retain open device handles. User mappings, preferences, and logs are retained. Their locations are documented in [configuration](docs/configuration.md).
 
 ## Acknowledgments and license
 
