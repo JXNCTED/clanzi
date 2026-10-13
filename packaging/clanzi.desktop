@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
 Name=clanzi
-Comment=Local AU05 keyboard mapping
-Comment[zh_CN]=AU05 本机键盘映射
+Comment=Linux key mapper for Ulanzi Vibe Key (AU05)
+Comment[zh_CN]=Ulanzi Vibe Key（AU05）Linux 键位映射工具
 Exec=clanzi
 Icon=clanzi
 Terminal=false

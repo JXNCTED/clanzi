@@ -1,0 +1,20 @@
+name: Feature request / 功能建议
+description: Describe a workflow you would like clanzi to support.
+body:
+  - type: markdown
+    attributes:
+      value: "English and Chinese suggestions are welcome. / 欢迎使用中文或英文提出建议。"
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or workflow / 问题或使用场景
+      description: What are you trying to do, and what gets in the way? / 你想完成什么，目前有什么阻碍？
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Suggested behavior / 建议行为
+      description: Include an example and any current workaround. / 请提供示例及目前的替代方式。
+    validations:
+      required: true

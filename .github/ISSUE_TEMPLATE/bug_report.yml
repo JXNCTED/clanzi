@@ -1,0 +1,39 @@
+name: Bug report / 问题反馈
+description: Report a reproducible problem or a Linux/AU05 hardware test result.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        English and Chinese reports are welcome. Please check the troubleshooting guide and existing issues first. Remove private details from logs.
+        欢迎使用中文或英文。请先查看故障排查文档与已有问题，移除日志中的隐私信息。
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment / 运行环境
+      description: Version or commit, install method, Linux distribution/kernel, desktop, Wayland/Xorg, and demo or real hardware.
+      placeholder: "clanzi version/commit; .deb or source; Ubuntu version; kernel; GNOME/KDE; Wayland/Xorg; browser/native demo or AU05"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce / 复现步骤
+      description: Include the control and shortcut involved. / 请说明相关控件和快捷键。
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior / 预期与实际行为
+    validations:
+      required: true
+  - type: textarea
+    id: device
+    attributes:
+      label: AU05 details / 设备信息
+      description: If using hardware, include firmware if known, receiver count, other clients, and visible status/error codes.
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Logs, screenshots, or test results / 日志、截图或测试结果
+      description: Share relevant excerpts, not full private configuration. Say which checks were performed on real hardware.

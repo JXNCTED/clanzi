@@ -3,7 +3,7 @@ name = "clanzi"
 license = "MIT"
 version = "0.1.0"
 edition = "2021"
-description = "clanzi Linux desktop key mapper"
+description = "Linux desktop key mapper for Ulanzi Vibe Key (AU05)"
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }

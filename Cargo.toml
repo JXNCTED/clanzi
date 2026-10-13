@@ -3,7 +3,7 @@ name = "clanzi-core"
 version = "0.1.0"
 edition = "2021"
 rust-version = "1.85"
-description = "Linux AU05 key mapping runtime"
+description = "Linux key mapping runtime for Ulanzi Vibe Key (AU05)"
 license = "MIT"
 
 [dependencies]

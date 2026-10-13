@@ -1,82 +1,98 @@
-# clanzi — AU05 key mapper for Linux
+# clanzi
 
-[中文](README.zh.md) · [Configuration](docs/configuration.md) · [Troubleshooting](docs/troubleshooting.md) · [Validation status](docs/acceptance.md)
+**Turn your Ulanzi Vibe Key into a Linux shortcut controller.**
 
-A local Linux x86_64 desktop mapper for Ulanzi Vibe Key (AU05), built with **Tauri 2, React, TypeScript, and Rust**.
+[中文](README.zh.md) · [Get started](#get-started) · [Configuration](docs/configuration.md) · [Troubleshooting](docs/troubleshooting.md) · [Contribute](CONTRIBUTING.md)
 
-- Map six controls to keys and Ctrl/Shift/Alt/Super combinations.
-- Buttons follow physical press and release; knob rotation sends short taps.
-- Edit offline, save locally, and import/export JSON configurations.
-- Keep mappings active in the background, with an English or Chinese interface.
+clanzi is an independent, open-source desktop key mapper for the **[Ulanzi Vibe Key (AU05)](https://www.ulanzi.com/products/au05-vibe-key-ai-voice-input-keypad-i018)**. Assign keyboard shortcuts to its three buttons, knob press, and two rotation directions, then keep them running in the background on Linux.
 
-The desktop UI displays the name **clanzi**. Closing the window keeps forwarding active; use **Settings → Quit clanzi** to exit. Linux desktop and hardware validation is still incomplete; see [validation status](docs/acceptance.md).
+Use it for push-to-talk, editor commands, media keys, or shortcuts in your favorite apps. Built with Rust, Tauri 2, React, and TypeScript; available in English and Simplified Chinese.
 
-## Build and run
+![clanzi's English keymap editor showing Ctrl+C assigned to the top button](docs/images/keymap-en.png)
 
-Install Rust, Node.js 24, and the [Tauri Linux prerequisites](https://v2.tauri.app/start/prerequisites/#linux). On Ubuntu:
+*Browser demo of the editor. This preview does not access hardware or send system keys.*
+
+## What you can do
+
+- **Map six controls:** choose a key and combine Ctrl, Shift, Alt, or Super; set unused controls to **No action**.
+- **Hold naturally:** buttons and the knob press follow physical press/release. Rotation sends short key taps.
+- **Edit before applying:** changes stay in a draft until you save; import and export JSON mappings.
+- **Keep shortcuts available:** closing the window leaves forwarding active. Reopen clanzi to edit, pause, or quit.
+- **Keep configuration local:** mappings, preferences, and diagnostic logs stay on your computer. clanzi does not listen to ordinary keyboard typing.
+
+clanzi handles keyboard mapping, not voice transcription, firmware updates, lighting, or onboard key tables. It is a community project and is not affiliated with or endorsed by Ulanzi. For the original macOS project and protocol research, see [Olanzi](https://github.com/MrCroxx/olanzi).
+
+clanzi is early-stage software for Linux x86_64. Release packages are built on Ubuntu 24.04. There are no Windows or macOS builds.
+
+## Get started
+
+You need an AU05 with its USB receiver and a local Linux desktop session. Close Ulanzi Studio and other AU05 clients before connecting; use one receiver at a time.
+
+### Install a release
+
+Check [GitHub Releases](https://github.com/JXNCTED/clanzi/releases) for a Linux amd64 `.deb` and `SHA256SUMS`. If no packaged release is available, [build from source](#build-from-source).
+
+Download both files into the same directory. From that directory, verify and install them (replace `0.1.0` with the downloaded version):
 
 ```sh
-sudo apt install libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev build-essential
+sha256sum --check SHA256SUMS
+sudo apt install ./clanzi_0.1.0_amd64.deb
+clanzi
+```
+
+The package installs device permission rules and enables the uinput module automatically. Reconnect the receiver after installation. Run clanzi as your normal logged-in desktop user.
+
+### Make your first mapping
+
+1. Turn on AU05 and open clanzi. In **Settings**, check the receiver and device status; use **Retry connection** if needed.
+2. In **Keymap**, select a control, choose a key, and add any modifiers. For a simple first test, assign the top key to `A`.
+3. Click **Save to computer**. Editing or importing alone does not change the active mapping. Wait for **Forwarding**; release all controls if synchronization is pending.
+4. Focus a blank text editor and press the assigned control. Unassigned controls set to **No action** are ignored while forwarding.
+5. Close the window to keep running. Launch clanzi again to reopen it. Use **Settings → Quit clanzi** or the tray menu to exit fully.
+
+You can edit and save without a connected device. Forwarding starts when the device and permissions are ready. **Pause forwarding** attempts to return control to the device; its own mappings may still produce input. For connection or stuck-key problems, see [troubleshooting](docs/troubleshooting.md).
+
+### Push-to-talk with Handy
+
+Set Handy to push-to-talk, assign an AU05 button to the recording shortcut configured in Handy, and save. Hold the button to record; release it to stop. clanzi forwards the shortcut; Handy handles recording and transcription. No long-press mode or threshold is needed.
+
+## Build from source
+
+Install Git, Node.js 24, a current stable Rust toolchain, and the [Tauri Linux prerequisites](https://v2.tauri.app/start/prerequisites/#linux). On Ubuntu:
+
+```sh
+sudo apt update
+sudo apt install git build-essential pkg-config curl wget file libssl-dev libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev
+git clone https://github.com/JXNCTED/clanzi.git
+cd clanzi
 npm ci
 cargo fetch --locked
 cargo fetch --manifest-path src-tauri/Cargo.toml --locked
 make deb
-sudo apt install ./artifacts/clanzi_0.1.0_amd64.deb
-clanzi
 ```
 
-The `.deb` automatically installs permission rules and enables the uinput module. Reconnect the receiver after installation, then select **Settings → Retry connection**. Run the GUI as your normal desktop user and close other AU05 clients. The rules grant the active local session access to the AU05 vendor interface and `/dev/uinput`; they do not grant access to physical keyboard event nodes.
+Install `artifacts/clanzi_<version>_amd64.deb` with `sudo apt install`, then follow the first-mapping steps above. `make deb` uses the version in the repository manifests.
 
-To update, quit the running instance first. After rebuilding, run `./src-tauri/target/release/clanzi`, or reinstall the package with `sudo apt install --reinstall ./artifacts/clanzi_0.1.0_amd64.deb`.
+To explore the UI without hardware, run `npm run dev` and open the localhost URL printed by Vite. The browser demo stores data in memory and sends no system keys. For native development, isolated demo mode, checks, and the code map, see [Contributing](CONTRIBUTING.md).
 
-## Voice input with Handy
+## Update or uninstall
 
-Assign an AU05 button to your Handy recording shortcut and save. Set Handy to push-to-talk: hold the button to record, release to stop. All three buttons and the knob press follow physical duration automatically, with no mode selector or long-press threshold. See [configuration](docs/configuration.md) for shared-key behavior and compatibility.
-
-## Development and checks
-
-```sh
-make dev                 # Native desktop development
-make demo                # Isolated native demo, no real device or key output
-make check               # Formatting, core lint, frontend build, and tests
-cargo clippy --manifest-path src-tauri/Cargo.toml --offline --all-targets -- -D warnings
-npm exec playwright install chromium
-node tools/ui-smoke.mjs
-```
-
-`make dev` invokes the Tauri CLI through npm. Alternatively, run `npm run dev` and `cargo run --manifest-path src-tauri/Cargo.toml` in separate terminals. Vite uses port 1420; browser-only preview stores data in memory. Demo success does not establish hardware compatibility.
-
-| Path | Purpose |
-|---|---|
-| `ui/` | React editor, bilingual text, frontend validation, IPC |
-| `src/` | Configuration, storage, protocol, runtime, hidraw/uinput, worker service |
-| `src-tauri/` | Native window, tray, single instance, file dialogs |
-| `tests/`, `tools/` | Deterministic tests, UI smoke test, package build |
-| `packaging/` | Desktop entry, permission rules, and package lifecycle scripts |
-
-The [reference specification](cross-platform-replication-spec.md) records the upstream design baseline. Current Linux behavior and deviations are documented in [configuration](docs/configuration.md) and [validation status](docs/acceptance.md).
-
-## Releases
-
-The [Release workflow](.github/workflows/release.yml) builds Linux amd64 packages on Ubuntu 24.04 when a `vMAJOR.MINOR.PATCH` tag is pushed. It checks versions, runs core/frontend/UI tests, and publishes a GitHub Release containing the `.deb` and `SHA256SUMS`, with generated release notes. Prerelease suffixes are not supported yet.
-
-Before tagging, keep the versions in `Cargo.toml`, `src-tauri/Cargo.toml`, `src-tauri/tauri.conf.json`, and `package.json` aligned; refresh and commit both Cargo lockfiles and `package-lock.json` as needed. Commit the workflow and all release files, then validate and tag that commit:
-
-```sh
-node tools/release-version.mjs v0.1.0
-git tag -a v0.1.0 -m "clanzi v0.1.0"
-git push origin v0.1.0
-```
-
-Use the matching version for future releases. In **Actions → Release → Run workflow**, an existing tag can also be selected for a manual run. Builds use that tag’s source. The workflow uses GitHub’s automatic `GITHUB_TOKEN`; no personal access token is needed. Only the publishing job has `contents: write`. An existing Release is not overwritten; use a new version if one has already been published.
-
-## Uninstall
+Quit the running instance before updating, then install the newer `.deb` with `sudo apt install ./clanzi_<version>_amd64.deb`. Closing the window is not enough to stop the old instance.
 
 ```sh
 sudo apt remove clanzi
 ```
 
-The package manager automatically removes the packaged permission rules and boot-time module configuration. Quit clanzi before uninstalling; an already running process may retain open device handles. User mappings, preferences, and logs are retained. Their locations are documented in [configuration](docs/configuration.md).
+Quit before uninstalling. The package manager removes the packaged permission rules and module-load configuration; your mappings, preferences, and logs remain. See [configuration](docs/configuration.md) for their locations and deletion instructions.
+
+## Documentation and support
+
+- [Configuration and input behavior](docs/configuration.md) — save semantics, shared keys, JSON compatibility, and local files.
+- [Troubleshooting](docs/troubleshooting.md) — permissions, connection status, synchronization, and recovery.
+- [Contributing](CONTRIBUTING.md) — developer setup, checks, and bug-report guidance.
+- [Release guide](docs/releases.md) — version alignment, tagging, and packaging workflow.
+
+Report bugs or suggest improvements through [GitHub Issues](https://github.com/JXNCTED/clanzi/issues). English and Chinese reports are welcome.
 
 ## Acknowledgments and license
 

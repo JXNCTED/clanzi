@@ -1,6 +1,6 @@
 # 11 Olanzi cross platform reference replication specification
 
-> Reference snapshot from [MrCroxx/olanzi](https://github.com/MrCroxx/olanzi). The current application is named clanzi; the historical names below belong to the upstream snapshot. Current Linux scope and button behavior are documented in [configuration](docs/configuration.md) and [validation status](docs/acceptance.md). See [upstream notices](THIRD_PARTY_NOTICES.md).
+> Reference snapshot from [MrCroxx/olanzi](https://github.com/MrCroxx/olanzi). The current application is named clanzi; the historical names below belong to the upstream snapshot. Current Linux scope and button behavior are documented in [configuration](docs/configuration.md). See [upstream notices](THIRD_PARTY_NOTICES.md).
 
 > 🌐 [中文](cross-platform-replication-spec.zh.md)
 

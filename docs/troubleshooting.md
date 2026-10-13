@@ -2,7 +2,7 @@
 
 [中文](troubleshooting.zh.md)
 
-📚 [README](../README.md) · [Acceptance](acceptance.md) · **Troubleshooting**
+📚 [README](../README.md) · **Troubleshooting**
 
 ## Receiver and output are separate
 
@@ -33,7 +33,7 @@ An error remains visible after hiding and reopening the window. Logs distinguish
 
 Held controls observed before or during handover are quarantined until released. Rotation pulses restart the 100 ms quiet window. If a held control prevents synchronization for more than three seconds, release every control and use the explicit resynchronize button. The application sends no test key.
 
-This is not a complete physical-state snapshot. The protocol provides no timestamp or sequence number that distinguishes an arbitrarily delayed old press from a new press. Startup-with-held-controls and delayed reports are release-blocking hardware validation items; see the acceptance record.
+This is not a complete physical-state snapshot. The protocol provides no timestamp or sequence number that distinguishes an arbitrarily delayed old press from a new press.
 
 ## Development failures
 
