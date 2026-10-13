@@ -22,7 +22,7 @@ clanzi 是为 **[Ulanzi Vibe Key（AU05）](https://www.ulanzi.com/products/au05
 
 clanzi 负责键位映射，不提供语音转写、固件更新、灯光控制或板载键表写入。本项目由社区独立开发，与 Ulanzi 无隶属关系，也未经其背书。原始 macOS 项目与协议研究见 [Olanzi](https://github.com/MrCroxx/olanzi)。
 
-clanzi 是面向 Linux x86_64 的早期软件，发布软件包在 Ubuntu 24.04 上构建。目前没有 Windows 或 macOS 版本。
+clanzi 是面向 Linux x86_64 的早期软件，发布软件包在 Ubuntu 22.04 上构建。目前没有 Windows 或 macOS 版本。
 
 ## 快速开始
 
@@ -30,17 +30,29 @@ clanzi 是面向 Linux x86_64 的早期软件，发布软件包在 Ubuntu 24.04 
 
 ### 安装发布版本
 
-在 [GitHub Releases](https://github.com/JXNCTED/clanzi/releases) 查找 Linux amd64 `.deb` 和 `SHA256SUMS`。若尚无发布软件包，请[从源码构建](#从源码构建)。
+在 [GitHub Releases](https://github.com/JXNCTED/clanzi/releases) 查找 Linux amd64 `.deb` 或 `.AppImage` 及 `SHA256SUMS`。若尚无发布软件包，请[从源码构建](#从源码构建)。
 
 将两个文件下载到同一目录，在该目录中校验并安装（把 `0.1.0` 替换为下载的版本）：
 
 ```sh
-sha256sum --check SHA256SUMS
+sha256sum --check --ignore-missing SHA256SUMS
 sudo apt install ./clanzi_0.1.0_amd64.deb
 clanzi
 ```
 
 软件包会自动安装设备权限规则并启用 uinput 模块。安装后重新插拔接收器，以普通的本地登录桌面用户运行 clanzi。
+
+### 运行 AppImage
+
+将 `.AppImage` 和 `SHA256SUMS` 下载到同一目录（把 `0.1.0` 替换为下载的版本）：
+
+```sh
+sha256sum --check --ignore-missing SHA256SUMS
+chmod +x clanzi_0.1.0_amd64.AppImage
+./clanzi_0.1.0_amd64.AppImage
+```
+
+使用真实设备前，按[AppImage 一次性权限配置](docs/troubleshooting.zh.md#appimage-权限配置)进行设置。Release 附带所需的 `70-clanzi.rules` 和 `clanzi.conf`。在 Ubuntu 22.04 上，若提示缺少 FUSE 库，请安装 `libfuse2`。AppImage 还需要主机提供 `dbus-monitor`、udev 和 kmod 工具。GUI 始终以普通桌面用户运行。
 
 ### 设置第一个映射
 
@@ -62,7 +74,7 @@ clanzi
 
 ```sh
 sudo apt update
-sudo apt install git build-essential pkg-config curl wget file libssl-dev libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev
+sudo apt install git build-essential pkg-config curl wget file libssl-dev libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev libfuse2 patchelf
 git clone https://github.com/JXNCTED/clanzi.git
 cd clanzi
 npm ci
@@ -72,6 +84,8 @@ make deb
 ```
 
 使用 `sudo apt install` 安装 `artifacts/clanzi_<版本>_amd64.deb`，再按上述步骤设置映射。`make deb` 使用仓库清单中的版本号。
+
+运行 `make appimage` 生成 `artifacts/clanzi_<版本>_amd64.AppImage`，并将权限文件复制到 `artifacts/`。首次构建会下载 Tauri CLI 和 AppImage 打包工具。
 
 无需硬件体验界面：运行 `npm run dev`，打开 Vite 输出的本机网址。浏览器演示仅在内存保存数据，不发送系统按键。原生开发、隔离演示模式、检查命令和代码目录见[贡献指南](CONTRIBUTING.zh.md)。
 
@@ -84,6 +98,8 @@ sudo apt remove clanzi
 ```
 
 卸载前请退出 clanzi。包管理器会移除随包安装的权限规则和模块加载配置，保留个人映射、偏好及日志。文件位置和删除方法见[配置说明](docs/configuration.zh.md)。
+
+AppImage 更新时先退出旧实例，再运行新文件。卸载时删除 AppImage；手动安装的权限文件按[故障排查](docs/troubleshooting.zh.md#appimage-权限配置)中的说明移除。
 
 ## 文档与支持
 

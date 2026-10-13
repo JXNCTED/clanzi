@@ -2,7 +2,7 @@ name: Linux
 on: [push, pull_request, workflow_dispatch]
 jobs:
   linux:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -11,7 +11,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
-      - run: sudo apt-get update && sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev
+      - run: sudo apt-get update && sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev libfuse2 patchelf
       - run: npm ci
       - run: cargo fetch --locked
       - run: cargo fetch --manifest-path src-tauri/Cargo.toml --locked
@@ -19,7 +19,12 @@ jobs:
       - run: npm exec playwright install --with-deps chromium
       - run: node tools/ui-smoke.mjs
       - run: make deb
+      - run: make appimage
       - uses: actions/upload-artifact@v4
         with:
           name: clanzi-linux-amd64
-          path: artifacts/
+          path: |
+            artifacts/*.deb
+            artifacts/*.AppImage
+            artifacts/70-clanzi.rules
+            artifacts/clanzi.conf

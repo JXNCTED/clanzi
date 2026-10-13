@@ -22,7 +22,7 @@ Use it for push-to-talk, editor commands, media keys, or shortcuts in your favor
 
 clanzi handles keyboard mapping, not voice transcription, firmware updates, lighting, or onboard key tables. It is a community project and is not affiliated with or endorsed by Ulanzi. For the original macOS project and protocol research, see [Olanzi](https://github.com/MrCroxx/olanzi).
 
-clanzi is early-stage software for Linux x86_64. Release packages are built on Ubuntu 24.04. There are no Windows or macOS builds.
+clanzi is early-stage software for Linux x86_64. Release packages are built on Ubuntu 22.04. There are no Windows or macOS builds.
 
 ## Get started
 
@@ -30,17 +30,29 @@ You need an AU05 with its USB receiver and a local Linux desktop session. Close 
 
 ### Install a release
 
-Check [GitHub Releases](https://github.com/JXNCTED/clanzi/releases) for a Linux amd64 `.deb` and `SHA256SUMS`. If no packaged release is available, [build from source](#build-from-source).
+Check [GitHub Releases](https://github.com/JXNCTED/clanzi/releases) for a Linux amd64 `.deb` or `.AppImage` and `SHA256SUMS`. If no packaged release is available, [build from source](#build-from-source).
 
 Download both files into the same directory. From that directory, verify and install them (replace `0.1.0` with the downloaded version):
 
 ```sh
-sha256sum --check SHA256SUMS
+sha256sum --check --ignore-missing SHA256SUMS
 sudo apt install ./clanzi_0.1.0_amd64.deb
 clanzi
 ```
 
 The package installs device permission rules and enables the uinput module automatically. Reconnect the receiver after installation. Run clanzi as your normal logged-in desktop user.
+
+### Run an AppImage
+
+Download the `.AppImage` and `SHA256SUMS` into the same directory (replace `0.1.0` with the downloaded version):
+
+```sh
+sha256sum --check --ignore-missing SHA256SUMS
+chmod +x clanzi_0.1.0_amd64.AppImage
+./clanzi_0.1.0_amd64.AppImage
+```
+
+For real-device use, follow the [one-time AppImage permission setup](docs/troubleshooting.md#appimage-permission-setup). The release includes `70-clanzi.rules` and `clanzi.conf` for this setup. On Ubuntu 22.04, install `libfuse2` if the AppImage reports a missing FUSE library. AppImage users also need the host's `dbus-monitor`, udev, and kmod tools. The GUI always runs as your normal desktop user.
 
 ### Make your first mapping
 
@@ -62,7 +74,7 @@ Install Git, Node.js 24, a current stable Rust toolchain, and the [Tauri Linux p
 
 ```sh
 sudo apt update
-sudo apt install git build-essential pkg-config curl wget file libssl-dev libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev
+sudo apt install git build-essential pkg-config curl wget file libssl-dev libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev libfuse2 patchelf
 git clone https://github.com/JXNCTED/clanzi.git
 cd clanzi
 npm ci
@@ -72,6 +84,8 @@ make deb
 ```
 
 Install `artifacts/clanzi_<version>_amd64.deb` with `sudo apt install`, then follow the first-mapping steps above. `make deb` uses the version in the repository manifests.
+
+Run `make appimage` to build `artifacts/clanzi_<version>_amd64.AppImage` and copy the permission files into `artifacts/`. The first build downloads the Tauri CLI and AppImage bundling tools.
 
 To explore the UI without hardware, run `npm run dev` and open the localhost URL printed by Vite. The browser demo stores data in memory and sends no system keys. For native development, isolated demo mode, checks, and the code map, see [Contributing](CONTRIBUTING.md).
 
@@ -84,6 +98,8 @@ sudo apt remove clanzi
 ```
 
 Quit before uninstalling. The package manager removes the packaged permission rules and module-load configuration; your mappings, preferences, and logs remain. See [configuration](docs/configuration.md) for their locations and deletion instructions.
+
+For AppImage updates, quit the old instance and run the new file. To uninstall, delete the AppImage; remove manually installed permission files as described in [troubleshooting](docs/troubleshooting.md#appimage-permission-setup).
 
 ## Documentation and support
 

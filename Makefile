@@ -1,4 +1,4 @@
-.PHONY: dev demo test check build deb
+.PHONY: dev demo test check build deb appimage
 dev:
 	npm run tauri -- dev
 demo:
@@ -18,3 +18,5 @@ build:
 	cargo build --manifest-path src-tauri/Cargo.toml --release --features custom-protocol --locked
 deb:
 	sh tools/package-deb.sh
+appimage:
+	sh tools/package-appimage.sh

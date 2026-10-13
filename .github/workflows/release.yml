@@ -22,7 +22,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 45
     outputs:
       version: ${{ steps.version.outputs.version }}
@@ -48,7 +48,7 @@ jobs:
       - name: Install Linux dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev libfuse2 patchelf
       - run: npm ci
       - run: cargo fetch --locked
       - run: cargo fetch --manifest-path src-tauri/Cargo.toml --locked
@@ -62,28 +62,39 @@ jobs:
       - run: npm exec playwright install --with-deps chromium
       - run: node tools/ui-smoke.mjs
       - run: make deb
-      - name: Verify package and generate checksum
+      - run: make appimage
+      - name: Verify packages and generate checksums
         working-directory: artifacts
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           package="clanzi_${VERSION}_amd64.deb"
+          appimage="clanzi_${VERSION}_amd64.AppImage"
           test "$(dpkg-deb -f "$package" Version)" = "$VERSION"
           test "$(dpkg-deb -f "$package" Architecture)" = amd64
-          sha256sum "$package" > SHA256SUMS
+          test -x "$appimage"
+          "./$appimage" --appimage-extract >/dev/null
+          test -x squashfs-root/usr/bin/clanzi
+          test -f squashfs-root/usr/share/doc/clanzi/LICENSE
+          test -f squashfs-root/usr/share/doc/clanzi/THIRD_PARTY_NOTICES.md
+          rm -rf squashfs-root
+          sha256sum "$package" "$appimage" 70-clanzi.rules clanzi.conf > SHA256SUMS
           sha256sum --check SHA256SUMS
       - uses: actions/upload-artifact@v4
         with:
           name: release-linux-amd64
           path: |
             artifacts/clanzi_${{ steps.version.outputs.version }}_amd64.deb
+            artifacts/clanzi_${{ steps.version.outputs.version }}_amd64.AppImage
+            artifacts/70-clanzi.rules
+            artifacts/clanzi.conf
             artifacts/SHA256SUMS
           if-no-files-found: error
           retention-days: 7
 
   publish:
     needs: build
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 10
     permissions:
       contents: write
@@ -101,5 +112,6 @@ jobs:
         run: |
           sha256sum --check SHA256SUMS
           gh release create "$RELEASE_TAG" \
-            "clanzi_${VERSION}_amd64.deb" SHA256SUMS \
+            "clanzi_${VERSION}_amd64.deb" "clanzi_${VERSION}_amd64.AppImage" \
+            70-clanzi.rules clanzi.conf SHA256SUMS \
             --verify-tag --generate-notes --title "clanzi $RELEASE_TAG"

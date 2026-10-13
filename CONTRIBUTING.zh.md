@@ -55,7 +55,7 @@ node tools/ui-smoke.mjs
 
 界面检查使用 `make check` 或 `npm run build` 生成的生产资源 `dist/`。可通过 `PLAYWRIGHT_CHROMIUM_EXECUTABLE` 指定兼容的现有浏览器。浏览器检查不能证明原生 WebKit、托盘或硬件兼容性。
 
-打包改动运行 `make deb` 并检查软件包。运行时改动添加覆盖真实边界或失败路径的行为测试。仅修改文档时检查链接和操作说明，无需增加实现镜像测试。
+打包改动运行 `make deb` 和 `make appimage`，检查两种软件包。AppImage 构建会下载打包工具，发布构建使用 Ubuntu 22.04。运行时改动添加覆盖真实边界或失败路径的行为测试。仅修改文档时检查链接和操作说明，无需增加实现镜像测试。
 
 ## 反馈问题或硬件测试结果
 

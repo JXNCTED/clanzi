@@ -6,11 +6,30 @@
 
 ## 接收器和输出是两种权限
 
-`PERMISSION_REQUIRED` 附带问题区域：`receiver` 表示 AU05 厂商 hidraw 节点，`output` 表示 `/dev/uinput`。安装或重新安装 `.deb`（会自动配置权限），重新插拔接收器，以正常登录的桌面用户重试。SSH 会话可能没有 logind 的活动席位 ACL。不要将 `/dev/input/*` 开放给所有人，也不要以 root 运行界面。
+`PERMISSION_REQUIRED` 附带问题区域：`receiver` 表示 AU05 厂商 hidraw 节点，`output` 表示 `/dev/uinput`。安装或重新安装 `.deb`，或按下方 AppImage 步骤配置权限，然后重新插拔接收器，以正常登录的桌面用户重试。SSH 会话可能没有 logind 的活动席位 ACL。不要将 `/dev/input/*` 开放给所有人，也不要以 root 运行界面。
 
 目标接收器使用 VID `0xFFF1`、PID `0x00DD`、厂商 Usage Page `0xFFFC` 和 Report ID `0x55`。运行时核对实际报告描述符。随附 udev 规则针对已记录的 USB 接口 `03`；接口或描述符变化需要单独验证。
 
 从旧版手动权限安装器升级时，会移除 `/etc/udev/rules.d/70-clanzi.rules` 和 `/etc/modules-load.d/clanzi.conf` 中未修改的副本，改用包管理器维护的 `/usr/lib` 文件。已修改的文件和符号链接作为本地覆盖保留，卸载时也不会删除。开发版可使用已安装 `.deb` 配置的权限。如果安装过程提示模块或规则未能立即启用，请重启并重新插拔后重试。
+
+## AppImage 权限配置
+
+AppImage 不安装系统权限规则。若已安装的 clanzi `.deb` 已配置访问权限，可以直接复用。否则，从与 AppImage 相同的 Release 下载 `70-clanzi.rules`、`clanzi.conf` 和 `SHA256SUMS`，安装前检查目标文件是否已存在，保留本地覆盖配置。在该目录中执行以下 Ubuntu 22.04 命令：
+
+```sh
+sha256sum --check --ignore-missing SHA256SUMS
+sudo apt install libfuse2 dbus-bin udev kmod
+sudo install -Dm644 70-clanzi.rules /etc/udev/rules.d/70-clanzi.rules
+sudo install -Dm644 clanzi.conf /etc/modules-load.d/clanzi.conf
+sudo modprobe uinput
+sudo udevadm control --reload-rules
+sudo udevadm trigger --subsystem-match=misc --sysname-match=uinput
+sudo udevadm trigger --subsystem-match=hidraw
+```
+
+其他发行版请安装对应的主机软件包。重新插拔接收器，以普通桌面用户运行 AppImage，并选择**设置 → 重试连接**。每台电脑只需配置一次，更新 AppImage 无需重复操作。
+
+移除手动安装的文件时，先退出 clanzi，仅删除你安装到 `/etc` 的上述两个文件，再按上述命令重新加载和触发 udev。不要删除 `/usr/lib` 中由包管理器维护的文件。映射与偏好设置会保留。
 
 ## 状态与恢复
 

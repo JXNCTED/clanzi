@@ -6,11 +6,30 @@
 
 ## Receiver and output are separate
 
-`PERMISSION_REQUIRED` includes an area. `receiver` concerns the AU05 vendor hidraw node; `output` concerns `/dev/uinput`. Install or reinstall the `.deb` (it configures permissions automatically), reconnect the receiver, and retry as your normal logged-in desktop user. An SSH session may not receive logind's active-seat ACL. Do not give everyone access to `/dev/input/*` or run the GUI as root.
+`PERMISSION_REQUIRED` includes an area. `receiver` concerns the AU05 vendor hidraw node; `output` concerns `/dev/uinput`. Install or reinstall the `.deb`, or follow the AppImage setup below, reconnect the receiver, and retry as your normal logged-in desktop user. An SSH session may not receive logind's active-seat ACL. Do not give everyone access to `/dev/input/*` or run the GUI as root.
 
 The target receiver has VID `0xFFF1`, PID `0x00DD`, vendor Usage Page `0xFFFC`, and Report ID `0x55`. The runtime checks the actual report descriptor. The supplied udev rule targets the documented USB interface `03`; an altered descriptor/interface needs separate verification.
 
 When upgrading from the manual permission installer, unchanged copies in `/etc/udev/rules.d/70-clanzi.rules` and `/etc/modules-load.d/clanzi.conf` are removed in favor of package-managed files in `/usr/lib`. Modified files and symlinks in `/etc` are preserved as local overrides, including on uninstall. Development builds can use the permissions configured by an installed `.deb`. If installation reports that the module or rules could not be activated, restart and reconnect before retrying.
+
+## AppImage permission setup
+
+AppImage does not install system permission rules. If an installed clanzi `.deb` already configured access, reuse those permissions. Otherwise download `70-clanzi.rules`, `clanzi.conf`, and `SHA256SUMS` from the same Release as your AppImage. Check for existing destination files before installing; preserve local overrides. From that directory, on Ubuntu 22.04:
+
+```sh
+sha256sum --check --ignore-missing SHA256SUMS
+sudo apt install libfuse2 dbus-bin udev kmod
+sudo install -Dm644 70-clanzi.rules /etc/udev/rules.d/70-clanzi.rules
+sudo install -Dm644 clanzi.conf /etc/modules-load.d/clanzi.conf
+sudo modprobe uinput
+sudo udevadm control --reload-rules
+sudo udevadm trigger --subsystem-match=misc --sysname-match=uinput
+sudo udevadm trigger --subsystem-match=hidraw
+```
+
+On other distributions, install the equivalent host packages. Reconnect the receiver, launch the AppImage as your normal desktop user, and choose **Settings → Retry connection**. This setup is needed once per computer, not for every AppImage update.
+
+To remove the manually installed files, quit clanzi, remove only the two files you installed in `/etc`, then reload and trigger udev using the commands above. Do not remove package-managed files in `/usr/lib`. Mappings and preferences are retained.
 
 ## Status and recovery
 

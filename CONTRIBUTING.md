@@ -55,7 +55,7 @@ node tools/ui-smoke.mjs
 
 The UI check uses the production `dist/` from `make check` or `npm run build`. A compatible existing browser can be selected with `PLAYWRIGHT_CHROMIUM_EXECUTABLE`. Browser checks do not establish native WebKit, tray, or hardware compatibility.
 
-For packaging changes, run `make deb` and inspect the package. For runtime changes, add behavior tests covering the affected edge or failure path. Documentation-only changes need link and instruction checks, not new implementation tests.
+For packaging changes, run `make deb` and `make appimage`, then inspect both packages. AppImage builds download bundling tools; release builds use Ubuntu 22.04. For runtime changes, add behavior tests covering the affected edge or failure path. Documentation-only changes need link and instruction checks, not new implementation tests.
 
 ## Report a bug or hardware result
 
