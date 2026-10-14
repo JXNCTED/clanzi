@@ -1,7 +1,7 @@
 [package]
 name = "clanzi"
 license = "MIT"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Linux desktop key mapper for Ulanzi Vibe Key (AU05)"
 

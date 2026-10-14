@@ -1,6 +1,6 @@
 {
   "name": "clanzi",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Linux desktop key mapper for Ulanzi Vibe Key (AU05)",
   "private": true,
   "type": "module",
