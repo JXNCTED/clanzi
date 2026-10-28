@@ -64,6 +64,10 @@ chmod +x clanzi_0.1.0_amd64.AppImage
 
 未连接设备时也可编辑和保存；设备及权限就绪后开始转发。**暂停转发**会尝试交还控制，设备自身的映射仍可能产生输入。连接失败或快捷键卡住时请查看[故障排查](docs/troubleshooting.zh.md)。
 
+### 推荐语音输入法
+
+推荐使用 **[fcitx5-vinput](https://github.com/xifan2333/fcitx5-vinput)**，这是面向 Fcitx5 的语音输入工具，支持本地离线与云端语音识别，以及点击切换录音和按住说话两种触发方式。安装与配置方法见项目文档；配置好录音快捷键后，可在 clanzi 中将 AU05 按钮映射为对应快捷键并保存。clanzi 负责转发快捷键，fcitx5-vinput 负责录音和转写。
+
 ### 配合 Handy 按住说话
 
 在 Handy 中启用按住说话，将 AU05 按钮设为 Handy 已配置的录音快捷键并保存。按住录音，松开停止。clanzi 转发快捷键，Handy 负责录音和转写；无需选择长按模式或设置阈值。

@@ -64,6 +64,10 @@ For real-device use, follow the [one-time AppImage permission setup](docs/troubl
 
 You can edit and save without a connected device. Forwarding starts when the device and permissions are ready. **Pause forwarding** attempts to return control to the device; its own mappings may still produce input. For connection or stuck-key problems, see [troubleshooting](docs/troubleshooting.md).
 
+### Recommended voice input
+
+We recommend **[fcitx5-vinput](https://github.com/xifan2333/fcitx5-vinput)**, a voice input tool for Fcitx5 with local offline and cloud speech recognition, plus tap-to-toggle and push-to-talk recording modes. Follow its project documentation for installation and setup; once you have configured a recording shortcut, map an AU05 button to that shortcut in clanzi and save. clanzi forwards the shortcut; fcitx5-vinput handles recording and transcription.
+
 ### Push-to-talk with Handy
 
 Set Handy to push-to-talk, assign an AU05 button to the recording shortcut configured in Handy, and save. Hold the button to record; release it to stop. clanzi forwards the shortcut; Handy handles recording and transcription. No long-press mode or threshold is needed.
